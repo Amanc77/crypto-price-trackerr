@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import Chart from 'react-google-charts';
-// Style Component
-import './LineChart.css';
+import React, { useEffect, useState } from "react";
+import Chart from "react-google-charts";
 
 const LineChart = ({ historicalData }) => {
-  const [data, setData] = useState([['Data', 'Prices']]);
+  const [data, setData] = useState([["Data", "Prices"]]);
 
   useEffect(() => {
-    let dataCopy = [['Data', 'Prices']];
+    let dataCopy = [["Data", "Prices"]];
 
     if (historicalData.prices) {
       historicalData.prices.map((item) => {

@@ -1,188 +1,182 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CoinContext } from "../../context/CoinContext";
 import { Link } from "react-router-dom";
-// Style Component
-import "./Home.css";
 
 const Home = () => {
-  const { allCoin, currency } = useContext(CoinContext);
+  const { allCoin, currency, loading, error } = useContext(CoinContext);
   const [displayCoin, setDisplayCoin] = useState([]);
   const [input, setInput] = useState("");
 
-  const inputHandler = (event) => {
-    setInput(event.target.value);
-
-    if (event.target.value === "") {
+  const inputHandler = (e) => {
+    const value = e.target.value;
+    setInput(value);
+    if (value === "") {
       setDisplayCoin(allCoin);
+    } else {
+      const coins = allCoin.filter((coin) =>
+        coin.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setDisplayCoin(coins);
     }
   };
 
-  const searchHandler = async (event) => {
-    event.preventDefault();
-    const coins = await allCoin.filter((item) => {
-      return item.name.toLowerCase().includes(input.toLowerCase());
-    });
-
-    setDisplayCoin(coins);
+  const searchHandler = (e) => {
+    e.preventDefault();
+    if (input === "") {
+      setDisplayCoin(allCoin);
+    } else {
+      const coins = allCoin.filter((coin) =>
+        coin.name.toLowerCase().includes(input.toLowerCase())
+      );
+      setDisplayCoin(coins.length > 0 ? coins : allCoin);
+    }
   };
 
   useEffect(() => {
     setDisplayCoin(allCoin);
   }, [allCoin]);
 
+  if (loading)
+    return <div className="text-center mt-10 text-white">Loading...</div>;
+  if (error)
+    return <div className="text-center mt-10 text-red-500">Error: {error}</div>;
+
   return (
-    <div className="home">
-      <div className="hero">
-        <h1>Crypto Price Tracker</h1>
-
-        <p>
-          Welcome to the world's largest cryptocurrency marketplace. <br /> Sign
-          up to explore more about cryptos.
+    <div className="px-4 text-white font-sans sm:px-6">
+      {/* Hero Section */}
+      <div className="max-w-3xl mx-auto text-center mt-5 space-y-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+          Crypto Price Tracker
+        </h1>
+        <p className="text-sm sm:text-base text-gray-300 font-medium">
+          Welcome to the world's largest cryptocurrency marketplace.
+          <br />
+          Sign up to explore more about cryptos.
         </p>
-
-        <form onSubmit={searchHandler}>
+        <form
+          onSubmit={searchHandler}
+          className="flex items-center gap-2 bg-[#1a1333] border border-gray-600 rounded-lg px-3 py-2 w-full mx-auto mt-6 sm:w-4/5"
+        >
           <input
-            onChange={inputHandler}
-            list="coinlist"
-            value={input}
             type="text"
             placeholder="Search crypto..."
-            required
+            value={input}
+            onChange={inputHandler}
+            list="coinlist"
+            className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none text-sm sm:text-base font-medium tracking-wide"
           />
-
           <datalist id="coinlist">
-            {allCoin.map((item, index) => (
-              <option key={index} value={item.name} />
+            {allCoin.map((coin, i) => (
+              <option key={i} value={coin.name} />
             ))}
           </datalist>
-
-          <button type="submit">Search</button>
+          <button
+            type="submit"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-md transition text-sm sm:text-base"
+          >
+            Search
+          </button>
         </form>
       </div>
 
-      <div className="crypto-table">
-        <div className="table-layout">
+      {/* Table Section */}
+      <div className="max-w-7xl mx-auto mt-8 sm:mt-12 bg-gradient-to-br from-purple-800/20 to-purple-900/10 rounded-xl overflow-x-auto">
+        <div className="hidden sm:grid sm:grid-cols-[0.4fr_2.5fr_1fr_1fr_1fr_2fr_2fr_2.5fr] text-xs sm:text-sm font-semibold text-gray-300 px-3 sm:px-5 py-3 border-b border-gray-700">
           <p>#</p>
           <p>Name</p>
           <p>Price</p>
-          <p style={{ textAlign: "center" }}>1H %</p>
-          <p style={{ textAlign: "center" }}>24H %</p>
-          <p style={{ textAlign: "center" }}>7D %</p>
-          <p className="market-cap">Market Cap</p>
-          <p className="volume">Volume(24h)</p>
-          <p className="circulating-Supply">Circulating Supply</p>
-          <p className="last-7daysImage">Last 7 Days</p>
+          <p className="text-center">1H %</p>
+          <p className="text-center">24H %</p>
+          <p className="text-right">Market Cap</p>
+          <p className="text-right">Volume(24h)</p>
+          <p className="text-right">Circulating Supply</p>
         </div>
 
-        {displayCoin.slice(0, 10).map((item, index) => (
-          <Link to={`/coin/${item.id}`} className="table-layout" key={index}>
-            <p>{item.market_cap_rank}</p>
+        <div className="w-full">
+          {displayCoin.length > 0 ? (
+            displayCoin.slice(0, 10).map((coin) => (
+              <Link
+                to={`/coin/${coin.id}`}
+                key={coin.id}
+                className="block sm:grid sm:grid-cols-[0.4fr_2.5fr_1fr_1fr_1fr_2fr_2fr_2.5fr] items-center px-3 sm:px-5 py-4 border-b border-gray-700 hover:bg-gray-800 transition-all text-xs sm:text-sm font-medium w-full"
+              >
+                <div className="sm:hidden flex items-center gap-3">
+                  <img src={coin.image} alt={coin.name} className="w-8 h-8" />
+                  <div className="flex-1">
+                    <p className="font-semibold tracking-wide">
+                      {coin.name} - {coin.symbol.toUpperCase()}
+                    </p>
+                    <p className="text-gray-400">#{coin.market_cap_rank}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold tracking-wide">
+                      {currency.symbol} {coin.current_price.toLocaleString()}
+                    </p>
+                    <p
+                      className={`${
+                        coin.price_change_percentage_24h_in_currency > 0
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {coin.price_change_percentage_24h_in_currency?.toFixed(
+                        2
+                      ) ?? "N/A"}
+                      % (24h)
+                    </p>
+                  </div>
+                </div>
 
-            <div>
-              <img src={item.image} alt="" />
-              <p>{item.name + " - " + item.symbol}</p>
+                <p className="hidden sm:block">{coin.market_cap_rank}</p>
+                <div className="hidden sm:flex items-center gap-2">
+                  <img src={coin.image} alt={coin.name} className="w-8 h-8" />
+                  <p className="font-semibold tracking-wide">
+                    {coin.name} - {coin.symbol.toUpperCase()}
+                  </p>
+                </div>
+                <p className="hidden sm:block font-semibold tracking-wide">
+                  {currency.symbol} {coin.current_price.toLocaleString()}
+                </p>
+                <p
+                  className={`hidden sm:block text-center tracking-wide ${
+                    coin.price_change_percentage_1h_in_currency > 0
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {coin.price_change_percentage_1h_in_currency?.toFixed(2) ??
+                    "N/A"}
+                  %
+                </p>
+                <p
+                  className={`hidden sm:block text-center tracking-wide ${
+                    coin.price_change_percentage_24h_in_currency > 0
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {coin.price_change_percentage_24h_in_currency?.toFixed(2) ??
+                    "N/A"}
+                  %
+                </p>
+                <p className="hidden sm:block text-right tracking-wide">
+                  {currency.symbol} {coin.market_cap?.toLocaleString() ?? "N/A"}
+                </p>
+                <p className="hidden sm:block text-right tracking-wide">
+                  {currency.symbol}{" "}
+                  {coin.total_volume?.toLocaleString() ?? "N/A"}
+                </p>
+                <p className="hidden sm:block text-right tracking-wide">
+                  {coin.circulating_supply?.toLocaleString() ?? "N/A"}
+                </p>
+              </Link>
+            ))
+          ) : (
+            <div className="text-center mt-10 text-gray-400">
+              No coins found.
             </div>
-
-            <p>
-              {currency.symbol} {item.current_price.toLocaleString()}
-            </p>
-
-            <p
-              className={
-                item.price_change_percentage_1h_in_currency > 0
-                  ? "green"
-                  : "red"
-              }
-            >
-              {item.price_change_percentage_1h_in_currency != null
-                ? item.price_change_percentage_1h_in_currency.toFixed(2)
-                : "N/A"}
-            </p>
-
-            <p
-              className={
-                item.price_change_percentage_24h_in_currency > 0
-                  ? "green"
-                  : "red"
-              }
-            >
-              {item.price_change_percentage_24h_in_currency != null
-                ? item.price_change_percentage_24h_in_currency.toFixed(2)
-                : "N/A"}
-            </p>
-
-            <p
-              className={
-                item.price_change_percentage_7d_in_currency > 0
-                  ? "green"
-                  : "red"
-              }
-            >
-              {item.price_change_percentage_7d_in_currency != null
-                ? item.price_change_percentage_7d_in_currency.toFixed(2)
-                : "N/A"}
-            </p>
-
-            <p className="market-cap">
-              {currency.symbol} {item.market_cap.toLocaleString()}
-            </p>
-
-            <p className="volume">
-              {currency.symbol} {item.total_volume?.toLocaleString() ?? "N/A"}
-            </p>
-
-            <p className="circulating-Supply">
-              {item.circulating_supply?.toLocaleString() ?? "N/A"}
-            </p>
-
-            <p className="last-7daysImage">
-              <img
-                src={`https://quickchart.io/chart?c=${encodeURIComponent(
-                  JSON.stringify({
-                    type: "line",
-                    data: {
-                      labels: Array(item.sparkline_in_7d.price.length).fill(""),
-                      datasets: [
-                        {
-                          data: item.sparkline_in_7d.price,
-                          borderColor:
-                            item.sparkline_in_7d.price.at(-1) >=
-                            item.sparkline_in_7d.price[0]
-                              ? "#06C270"
-                              : "#E74C3C",
-                          borderWidth: 2,
-                          fill: false,
-                          tension: 0.4,
-                        },
-                      ],
-                    },
-                    options: {
-                      plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false },
-                      },
-                      scales: {
-                        x: { display: false },
-                        y: { display: false },
-                      },
-                      elements: { point: { radius: 0 } },
-                      layout: { padding: 0 },
-                      backgroundColor: "white",
-                    },
-                  })
-                )}`}
-                alt="7d trend"
-                style={{
-                  width: "100%",
-                  height: "55px",
-                  objectFit: "cover",
-
-                  backgroundColor: "white",
-                }}
-              />
-            </p>
-          </Link>
-        ))}
+          )}
+        </div>
       </div>
     </div>
   );
