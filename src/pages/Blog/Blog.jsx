@@ -15,7 +15,8 @@ const Blog = () => {
       category: "Market Trends",
       date: "May 1, 2025",
       author: "Jane Doe",
-      image: "https://via.placeholder.com/600x400?text=Bitcoin+Surge",
+      image:
+        "https://akm-img-a-in.tosshub.com/businesstoday/images/story/202411/672afbabbe2d9-among-other-top-crypto-tokens--dogecoin-zoomed-nearly-30-per-cent--while-uniswap-was-up-23-per-cent-061621873-16x9.jpg?size=948:533",
     },
     {
       id: 2,
@@ -25,7 +26,8 @@ const Blog = () => {
       category: "DeFi",
       date: "April 28, 2025",
       author: "John Smith",
-      image: "https://via.placeholder.com/600x400?text=Ethereum+Merge",
+      image:
+        "https://images.ctfassets.net/s9n78lc7gxyk/5RYhQ2NFehUFybU1bmA3wT/cb0a58aefe58944da034843d5c575408/A_futuristic_3D_Ethereum_logo_transforming_into_a_brighter__upgraded_version__with__network_nodes__validators__and_proof-of-.jpg",
     },
     {
       id: 3,
@@ -35,7 +37,8 @@ const Blog = () => {
       category: "Security",
       date: "April 25, 2025",
       author: "Alice Johnson",
-      image: "https://via.placeholder.com/600x400?text=Crypto+Security",
+      image:
+        "https://img.etimg.com/thumb/msid-103174563,width-300,height-225,imgsize-14626,resizemode-75/phishing-ransomware-beyond-seven-types-of-cyberattacks-you-should-know.jpg",
     },
     {
       id: 4,
@@ -45,7 +48,8 @@ const Blog = () => {
       category: "News",
       date: "April 20, 2025",
       author: "Bob Wilson",
-      image: "https://via.placeholder.com/600x400?text=Stablecoins",
+      image:
+        "https://images.cointelegraph.com/cdn-cgi/image/format=auto,onerror=redirect,quality=90,width=717/https://s3.cointelegraph.com/uploads/2025-03/0195bc06-6beb-722a-b4e1-eced4fc44f9b",
     },
     {
       id: 5,
@@ -55,7 +59,8 @@ const Blog = () => {
       category: "Market Trends",
       date: "April 15, 2025",
       author: "Emma Brown",
-      image: "https://via.placeholder.com/600x400?text=NFT+Recovery",
+      image:
+        "https://images.ctfassets.net/s9n78lc7gxyk/5RYhQ2NFehUFybU1bmA3wT/cb0a58aefe58944da034843d5c575408/A_futuristic_3D_Ethereum_logo_transforming_into_a_brighter__upgraded_version__with__network_nodes__validators__and_proof-of-.jpg",
     },
   ];
 

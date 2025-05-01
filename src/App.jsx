@@ -24,17 +24,10 @@ const App = () => {
           <Route path="/features" element={<Features />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:postId" element={<BlogPost />} />
         </Routes>
       </main>
       <Footer />
     </div>
-  );
-};
-
-const BlogPost = () => {
-  return (
-    <div className="p-6 text-center text-gray-300">Blog Post Content Here</div>
   );
 };
 

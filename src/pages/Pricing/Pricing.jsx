@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { CoinContext } from "../../context/CoinContext"; // Import CoinContext
 
 const Pricing = () => {
+  const { currency } = useContext(CoinContext); // Access currency from context
   const [isYearly, setIsYearly] = useState(false);
 
   const pricingPlans = [
@@ -103,7 +105,7 @@ const Pricing = () => {
             </h2>
             <p className="text-gray-400 text-sm mb-4">{plan.description}</p>
             <div className="text-3xl sm:text-4xl font-bold mb-4">
-              {currency.symbol}
+              {currency?.symbol || "$"}
               {isYearly ? plan.yearlyPrice : plan.monthlyPrice}
               <span className="text-sm font-normal text-gray-400">
                 /{isYearly ? "year" : "month"}

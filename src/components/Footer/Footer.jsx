@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className=" mt-5 w-full bg-[#002834] border-t border-gray-500 py-6 text-gray-400">
+    <footer
+      className="w-full py-6 text-gray-400"
+      style={{
+        background: "linear-gradient( #1d152f, #002834)",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Footer Content */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
@@ -28,7 +33,7 @@ const Footer = () => {
             </Link>
           </div>
 
-          {/* Social Media Icons (Optional) */}
+          {/* Social Media Icons */}
           <div className="flex gap-3 sm:gap-4">
             <a
               href="https://twitter.com"
@@ -79,7 +84,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright Notice */}
-        <div className="text-center mt-4 text-xs sm:text-sm">
+        <div className="text-center mt-4 text-xs sm:text-sm border-t border-gray-700 pt-4">
           <p>
             Copyright © {new Date().getFullYear()}, Crypto Price Tracking
             Application
