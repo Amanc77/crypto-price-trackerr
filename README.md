@@ -5,9 +5,11 @@ A crypto price tracking app built with **React.js** and **Vite**.
 
 ## 🌍 Live Demo
 
-📸 **Watch the demo:** [YouTube Video](https://youtu.be/jQaXR1BmF6Q?si=y2n63S4ry827Balf)  
-
 🚀 **Try the app live:** [Crypto Tracker App](https://price-trackerrr.netlify.app/)
+
+📸 **Watch the demo:** [YouTube Video](https://youtu.be/kxU106Gq-iw)  
+
+
 
 ## 💡 About this Project
 
