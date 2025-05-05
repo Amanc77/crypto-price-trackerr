@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { CoinContext } from "../../context/CoinContext";
 import { Link } from "react-router-dom";
 
@@ -6,17 +6,21 @@ const Home = () => {
   const { allCoin, currency, loading, error } = useContext(CoinContext);
   const [displayCoin, setDisplayCoin] = useState([]);
   const [input, setInput] = useState("");
+  const [visibleCoins, setVisibleCoins] = useState(10);
+  const tableRef = useRef(null);
 
   const inputHandler = (e) => {
     const value = e.target.value;
     setInput(value);
     if (value === "") {
       setDisplayCoin(allCoin);
+      setVisibleCoins(10);
     } else {
       const coins = allCoin.filter((coin) =>
         coin.name.toLowerCase().includes(value.toLowerCase())
       );
       setDisplayCoin(coins);
+      setVisibleCoins(10);
     }
   };
 
@@ -24,17 +28,43 @@ const Home = () => {
     e.preventDefault();
     if (input === "") {
       setDisplayCoin(allCoin);
+      setVisibleCoins(10);
     } else {
       const coins = allCoin.filter((coin) =>
         coin.name.toLowerCase().includes(input.toLowerCase())
       );
       setDisplayCoin(coins.length > 0 ? coins : allCoin);
+      setVisibleCoins(10);
+    }
+  };
+
+  const handleScroll = () => {
+    const table = tableRef.current;
+    if (
+      table.scrollHeight - table.scrollTop <= table.clientHeight + 50 &&
+      visibleCoins < displayCoin.length
+    ) {
+      setVisibleCoins((prev) => prev + 10);
     }
   };
 
   useEffect(() => {
     setDisplayCoin(allCoin);
+    setVisibleCoins(10);
   }, [allCoin]);
+
+  useEffect(() => {
+    const table = tableRef.current;
+    if (table) {
+      table.addEventListener("scroll", handleScroll);
+      return () => table.removeEventListener("scroll", handleScroll);
+    }
+  }, [displayCoin]);
+
+  // Filter coins for the datalist based on the input
+  const filteredCoins = allCoin.filter((coin) =>
+    coin.name.toLowerCase().includes(input.toLowerCase())
+  );
 
   if (loading)
     return <div className="text-center mt-10 text-white">Loading...</div>;
@@ -66,9 +96,10 @@ const Home = () => {
             className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none text-sm sm:text-base font-medium tracking-wide"
           />
           <datalist id="coinlist">
-            {allCoin.map((coin, i) => (
-              <option key={i} value={coin.name} />
-            ))}
+            {input &&
+              filteredCoins.map((coin, i) => (
+                <option key={i} value={coin.name} />
+              ))}
           </datalist>
           <button
             type="submit"
@@ -92,9 +123,34 @@ const Home = () => {
           <p className="text-right">Circulating Supply</p>
         </div>
 
-        <div className="w-full">
+        <div
+          ref={tableRef}
+          className="w-full max-h-[600px] overflow-y-auto scrollbar-custom"
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "rgba(156, 163, 175, 0.5) transparent",
+          }}
+        >
+          <style>
+            {`
+              .scrollbar-custom::-webkit-scrollbar {
+                width: 8px;
+              }
+              .scrollbar-custom::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              .scrollbar-custom::-webkit-scrollbar-thumb {
+                background-color: rgba(156, 163, 175, 0.5);
+                border-radius: 10px;
+                border: 2px solid transparent;
+              }
+              .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(156, 163, 175, 0.7);
+              }
+            `}
+          </style>
           {displayCoin.length > 0 ? (
-            displayCoin.slice(0, 10).map((coin) => (
+            displayCoin.slice(0, visibleCoins).map((coin) => (
               <Link
                 to={`/coin/${coin.id}`}
                 key={coin.id}
